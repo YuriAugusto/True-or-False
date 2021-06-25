@@ -5,6 +5,18 @@ $(window).on("load", function () {
 	let condicaoEscolhida = $("#escolha");
 	let botaoVerificar = $("#verificar");
 
+	//exemplo de como chamar uma função dentro de outra baseada em evento
+	function conta(arg1, arg2) {
+		let localValor = arg1 + arg2;
+		return localValor;
+	}
+	//essa function chama a de cima baseado no click
+	$("h1").on("click", function () {
+		let result = conta(2, 8);
+		console.log(result);
+	});
+	// o exemplo acaba aqui ----------------------------------------------
+
 	botaoVerificar.on("click", function () {
 		let valorCampoE = $("#campoEsquerdo").val();
 		let valorCampoD = $("#campoDireito").val();
@@ -22,20 +34,18 @@ $(window).on("load", function () {
 			//verifica boolean
 			if (valorCampoE == "true") {
 				let valor = true;
-				console.log("Valor encontrado: " + valor);
-				console.log("Typeof do valor encontrado: " + typeof valor);
+				console.log("Valor booleano encontrado: " + valor);
 				return valor;
 			} else if (valorCampoE == "false") {
 				let valor = false;
-				console.log("Valor encontrado: " + valor);
-				console.log("Typeof do valor encontrado: " + typeof valor);
+				console.log("Valor booleano encontrado: " + valor);
 				return valor;
 			}
 
 			//verifica somente letras sem aspas
 			let regex = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;//regex aceita apenas letras e acentuação
 			if (regex.test(valorCampoE)) {//se não contiver letras é número
-				console.log(`${valorCampoE} string sem aspas recebida com sucesso!`);
+				console.log(`${valorCampoE} string sem aspas recebida com sucesso`);
 				return valorCampoE;
 			}
 
@@ -43,10 +53,10 @@ $(window).on("load", function () {
 			let primeiroCaractere = valorCampoE.substr(0, 1)//1º arg index início da busca 2º arg qtd de caracteres retornados a partir do ponto de início
 			let ultimoCaractere = valorCampoE.substr(-1, 1)//1º arg index (-1) corresponde a última letra da string, 2º arg qtd de caracteres
 
-			if (((primeiroCaractere == "'") && (ultimoCaractere == "'")) 
-			|| ((primeiroCaractere == "\"") && (ultimoCaractere == "\""))) {//aqui eu fiz o "escape" das aspas duplas com uma contra barra \
+			if (((primeiroCaractere == "'") && (ultimoCaractere == "'"))
+				|| ((primeiroCaractere == "\"") && (ultimoCaractere == "\""))) {//aqui eu fiz o "escape" das aspas duplas com uma contra barra \
 				let valorRecebido = valorCampoE;
-				console.log(`${valorRecebido} Recebido com aspas simples ou duplas`);
+				console.log(`${valorRecebido} string recebida com aspas simples ou duplas`);
 				return valorRecebido;
 			}
 

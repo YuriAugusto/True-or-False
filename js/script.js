@@ -1,69 +1,80 @@
 $(window).on("load", function () {
-	// let valorCampoEVal = $("#campoEsquerdo").val();//não funciona 1º você recupera o elemento e quando for utilizar ele você consegue atribuir do elemento ".val() ou . length" a uma variável local
-	// let valorCampoEValLength = $("#campoEsquerdo").val().length;//não funciona
-
-	const campoE = $("#campoEsquerdo");
+	const campoE = $("#campoEsquerdo");//primeiro você recupera o elemento após isso você com a variável de acesso a ele "campoE" consegue recuperar o valor como ex: campoE.val() ou campoE.val().length
 	const campoD = $("#campoDireito");
-	const condicaoEscolhida = $("#escolha");
 	const botaoVerificar = $("#verificar");
+	let condicaoEscolhida = $("#escolha");
+	let resultadoCampoE = null;//variável que irá armazenar o tipo de dado inserido no input do usuário
+	let resultadoCampoD = null;
 
 	//campo Esquerdo
 	campoE.on("focusout", function () {
 		const valorCampoE = campoE.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
-		console.log(valorCampoE);
-		const resultado = identificaDadoDigitado(valorCampoE)
-		console.log("Valor recuperado da function campo E: " + typeof resultado);
+		resultadoCampoE = identificaDadoDigitado(valorCampoE);
 	});
 
 	//campo Direito
 	campoD.on("focusout", function () {
 		const valorCampoD = campoD.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
-		console.log(valorCampoD);
-		const resultado = identificaDadoDigitado(valorCampoD)
-		console.log("Valor recuperado da function campo D: " + typeof resultado);
+		resultadoCampoD = identificaDadoDigitado(valorCampoD);
 	});
 
-	function identificaDadoDigitado(valorCampo) {
+	botaoVerificar.on("click", function () {
+		console.log("Valor recebido pelo campo E: " + typeof resultadoCampoE);
+		console.log("Valor recebido pelo campo D: " + typeof resultadoCampoD);
 
-		if (valorCampo.length == 0) {
+		if (condicaoEscolhida.val() == 0) {//==
+			console.log(resultadoCampoD == resultadoCampoE);
+		}
+		if (condicaoEscolhida.val() == 1) {//!=
+			console.log(resultadoCampoD != resultadoCampoE);
+		}
+		if (condicaoEscolhida.val() == 2) {//===
+			console.log(resultadoCampoD === resultadoCampoE);
+		}
+		if (condicaoEscolhida.val() == 3) {//!==
+			console.log(resultadoCampoD !== resultadoCampoE);
+		}
+		console.log("");
+	});
+
+	function identificaDadoDigitado(valorDigitadoCampo) {//passo o valor recuperado do campo como argumento na chamada da function
+		
+		if (valorDigitadoCampo.length == 0) {//se o campo estiver vazio
 			console.log("Você precisa digitar algo no campo");
+			$(".erro").remove();
+			$("<p>Insira um valor para ser comparado.</p>").addClass("erro").insertAfter($("#pAcimaTabela"));
 			return null;
 		} else {
+			$(".erro").remove();
 			//verifica somente números
 			let regexNumeros = /^\d+$/;//somente números
-			if (regexNumeros.test(valorCampo)) {
-				console.log(`${valorCampo} um número a partir do regex`);
-				let numero = parseInt(valorCampo, 10);//1º arg valor recebido, 2º arg a base de conversão, neste caso decimal
+			if (regexNumeros.test(valorDigitadoCampo)) {
+				let numero = parseInt(valorDigitadoCampo, 10);//1º arg valor recebido, 2º arg a base de conversão, neste caso decimal
 				return numero;//retorno o valor convertido para number
 			}
 
 			//verifica boolean
-			if (valorCampo == "true") {
-				let valor = true;
-				console.log("Valor booleano encontrado: " + valor);
-				return valor;
-			} else if (valorCampo == "false") {
-				let valor = false;
-				console.log("Valor booleano encontrado: " + valor);
-				return valor;
+			if (valorDigitadoCampo == "true") {
+				let verdadeiro = true;
+				return verdadeiro;
+			} else if (valorDigitadoCampo == "false") {
+				let falso = false;
+				return falso;
 			}
 
-			//verifica somente letras sem aspas
+			//verifica strings sem aspas
 			let regex = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;//regex aceita apenas letras e acentuação
-			if (regex.test(valorCampo)) {//se não contiver letras é número
-				console.log(`${valorCampo} string sem aspas recebida com sucesso`);
-				return valorCampo;
+			if (regex.test(valorDigitadoCampo)) {//se não contiver letras é número
+				return valorDigitadoCampo;
 			}
 
 			//verifica string com "" ou ''
-			let primeiroCaractere = valorCampo.substr(0, 1)//1º arg index início da busca 2º arg qtd de caracteres retornados a partir do ponto de início
-			let ultimoCaractere = valorCampo.substr(-1, 1)//1º arg index (-1) corresponde a última letra da string, 2º arg qtd de caracteres
+			let primeiroCaractere = valorDigitadoCampo.substr(0, 1)//1º arg index início da busca 2º arg qtd de caracteres retornados a partir do ponto de início
+			let ultimoCaractere = valorDigitadoCampo.substr(-1, 1)//1º arg index (-1) corresponde a última letra da string, 2º arg qtd de caracteres
 
 			if (((primeiroCaractere == "'") && (ultimoCaractere == "'"))
 				|| ((primeiroCaractere == "\"") && (ultimoCaractere == "\""))) {//aqui eu fiz o "escape" das aspas duplas com uma contra barra \
-				let valorRecebido = valorCampo;
-				console.log(`${valorRecebido} string recebida com aspas simples ou duplas`);
-				return valorRecebido;
+				return valorDigitadoCampo;
 			}
 		}
 	}

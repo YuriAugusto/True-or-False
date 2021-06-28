@@ -8,13 +8,13 @@ $(window).on("load", function () {
 
 	//campo Esquerdo
 	campoE.on("focusout", function () {
-		const valorCampoE = campoE.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
+		let valorCampoE = campoE.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
 		resultadoCampoE = identificaDadoDigitado(valorCampoE);
 	});
 
 	//campo Direito
 	campoD.on("focusout", function () {
-		const valorCampoD = campoD.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
+		let valorCampoD = campoD.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
 		resultadoCampoD = identificaDadoDigitado(valorCampoD);
 	});
 
@@ -35,24 +35,20 @@ $(window).on("load", function () {
 			console.log(resultadoCampoD !== resultadoCampoE);
 		}
 		console.log("");
+
+		
 	});
 
 	function identificaDadoDigitado(valorDigitadoCampo) {//passo o valor recuperado do campo como argumento na chamada da function
-		
+
 		if (valorDigitadoCampo.length == 0) {//se o campo estiver vazio
 			console.log("Você precisa digitar algo no campo");
 			$(".erro").remove();
 			$("<p>Insira um valor para ser comparado.</p>").addClass("erro").insertAfter($("#pAcimaTabela"));
 			return null;
+
 		} else {
 			$(".erro").remove();
-			//verifica somente números
-			let regexNumeros = /^\d+$/;//somente números
-			if (regexNumeros.test(valorDigitadoCampo)) {
-				let numero = parseInt(valorDigitadoCampo, 10);//1º arg valor recebido, 2º arg a base de conversão, neste caso decimal
-				return numero;//retorno o valor convertido para number
-			}
-
 			//verifica boolean
 			if (valorDigitadoCampo == "true") {
 				let verdadeiro = true;
@@ -75,6 +71,19 @@ $(window).on("load", function () {
 			if (((primeiroCaractere == "'") && (ultimoCaractere == "'"))
 				|| ((primeiroCaractere == "\"") && (ultimoCaractere == "\""))) {//aqui eu fiz o "escape" das aspas duplas com uma contra barra \
 				return valorDigitadoCampo;
+			}
+
+			//verifica se o valor inputado não é número (NAN)
+			if (isNaN(valorDigitadoCampo)) {//se o valor inputado não for um número, ex: a1, 12a, '645", "97'...
+				console.log(valorDigitadoCampo + " não é um número");
+				return valorDigitadoCampo;
+			} else {//se o valor inputado for um número
+				let regexNumeros = /[+-]?([0-9]*[.])?[0-9]+/;//somente números ou sinais + - e , .
+				if (regexNumeros.test(valorDigitadoCampo)) {
+					let numero = parseFloat(valorDigitadoCampo, 10);//1º arg valor recebido, 2º arg a base de conversão, neste caso decimal
+					console.log("Valor convertido para float: " + numero);
+					return numero;//retorno o valor convertido para number
+				}
 			}
 		}
 	}

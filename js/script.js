@@ -1,4 +1,4 @@
-$(window).on("load", function () {
+$(document).ready(function () {//executa assim que a página carrega
 	const campoE = $("#campoEsquerdo");//primeiro você recupera o elemento após isso você com a variável de acesso a ele "campoE" consegue recuperar o valor como ex: campoE.val() ou campoE.val().length
 	const campoD = $("#campoDireito");
 	const botaoVerificar = $("#verificar");
@@ -40,18 +40,20 @@ $(window).on("load", function () {
 			resultado = (tipoDeDadoCampoE !== tipoDeDadoCampoD);
 		}
 
+		//variáveis para serem passadas como argumento na function que cria linha
 		let valoresComparados = tipoDeDadoCampoE + "" + sinalComparacao + "" + tipoDeDadoCampoD;
 		let tipoDeDado = typeof tipoDeDadoCampoE + " " + typeof tipoDeDadoCampoD;
 
+		//1º arg valor dos campos 2º arg typeof dos dois valores 3º arg resultado da comparação
 		let linhaCriada = criaLinhas(valoresComparados, tipoDeDado, resultado);
-		$(".corpoTabela").append(linhaCriada);//adiciona a linha ao elemento recuperado que é o corpo da tabela
+		$(".corpoTabela").prepend(linhaCriada);//adiciona a linha ao elemento recuperado que corresponde ao corpo da tabela
 
 	});
 
 	function identificaDadoDigitado(valorDigitadoCampo) {//passo o valor recuperado do campo como argumento na chamada da function
 		if (valorDigitadoCampo.length == 0) {//se o campo estiver vazio
 			$(".erro").remove();
-			$("<p>Insira um valor para ser comparado.</p>").addClass("erro").insertAfter($("#pAcimaTabela"));
+			$("<p>Se o campo estiver vazio a comparação não ocorrerá corretamente.</p>").addClass("erro").insertAfter($("#pAcimaTabela"));
 			return null;
 
 		} else {
@@ -83,12 +85,9 @@ $(window).on("load", function () {
 			//verifica se o valor inputado não é número (NAN)
 			if (isNaN(valorDigitadoCampo)) {//se o valor inputado não for um número, ex: a1, 12a, '645", "97'...
 				return valorDigitadoCampo;
-			} else {//se o valor inputado for um número
-				let regexNumeros = /[+-]?([0-9]*[.])?[0-9]+/;//somente números ou sinais + - e , .
-				if (regexNumeros.test(valorDigitadoCampo)) {
-					let numero = parseFloat(valorDigitadoCampo, 10);//1º arg valor recebido, 2º arg a base de conversão, neste caso decimal
-					return numero;//retorno o valor convertido para number
-				}
+			} else {//se o valor inputado for um número				
+				let numero = parseFloat(valorDigitadoCampo);
+				return numero;
 			}
 		}
 	}

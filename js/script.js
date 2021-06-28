@@ -22,21 +22,32 @@ $(window).on("load", function () {
 		console.log("Valor recebido pelo campo E: " + typeof resultadoCampoE);
 		console.log("Valor recebido pelo campo D: " + typeof resultadoCampoD);
 
+		let sinalComparacao = null;//recebe a string que corresponde ao sinal de comparação
+		let resultadoComparacao = null;//recebe o resultado da comparação, sendo true ou false
+
 		if (condicaoEscolhida.val() == 0) {//==
-			console.log(resultadoCampoD == resultadoCampoE);
+			sinalComparacao = "==";
+			resultadoComparacao = (resultadoCampoE == resultadoCampoD);
 		}
 		if (condicaoEscolhida.val() == 1) {//!=
-			console.log(resultadoCampoD != resultadoCampoE);
+			sinalComparacao = "!=";
+			resultadoComparacao = (resultadoCampoE != resultadoCampoD);
 		}
 		if (condicaoEscolhida.val() == 2) {//===
-			console.log(resultadoCampoD === resultadoCampoE);
+			sinalComparacao = "===";
+			resultadoComparacao = (resultadoCampoE === resultadoCampoD);
 		}
 		if (condicaoEscolhida.val() == 3) {//!==
-			console.log(resultadoCampoD !== resultadoCampoE);
+			sinalComparacao = "!==";
+			resultadoComparacao = (resultadoCampoE !== resultadoCampoD);
 		}
-		console.log("");
 
-		
+		let valoresComparados = resultadoCampoE + "" + sinalComparacao + "" + resultadoCampoD;
+		let tipoDado = typeof resultadoCampoE + " " + typeof resultadoCampoD;
+
+		let linhaCriada = criaLinhas(valoresComparados, tipoDado, resultadoComparacao);
+		$(".corpoTabela").append(linhaCriada);//adiciona a linha ao corpo da tabela
+
 	});
 
 	function identificaDadoDigitado(valorDigitadoCampo) {//passo o valor recuperado do campo como argumento na chamada da function
@@ -86,5 +97,15 @@ $(window).on("load", function () {
 				}
 			}
 		}
+	}
+
+	//cria linha
+	function criaLinhas(valores, tipoDeDado, resultado) {
+		let linha = "<tr>" +
+			"<td>" + valores + "</td>" +
+			"<td>" + tipoDeDado + "</td>" +
+			"<td>" + resultado + "</td>" +
+			"</tr>";
+		return linha;
 	}
 });

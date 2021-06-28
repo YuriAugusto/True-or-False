@@ -3,57 +3,53 @@ $(window).on("load", function () {
 	const campoD = $("#campoDireito");
 	const botaoVerificar = $("#verificar");
 	let condicaoEscolhida = $("#escolha");
-	let resultadoCampoE = null;//variável que irá armazenar o tipo de dado inserido no input do usuário
-	let resultadoCampoD = null;
+	let tipoDeDadoCampoE = null;//variável que irá armazenar o tipo de dado inserido no input do usuário
+	let tipoDeDadoCampoD = null;
 
 	//campo Esquerdo
 	campoE.on("focusout", function () {
 		let valorCampoE = campoE.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
-		resultadoCampoE = identificaDadoDigitado(valorCampoE);
+		tipoDeDadoCampoE = identificaDadoDigitado(valorCampoE);
 	});
 
 	//campo Direito
 	campoD.on("focusout", function () {
 		let valorCampoD = campoD.val();//aqui eu pego apenas o valor que o campo possui e atribuo a variável local, o acesso ao elemento ainda pertênce a variável campoE
-		resultadoCampoD = identificaDadoDigitado(valorCampoD);
+		tipoDeDadoCampoD = identificaDadoDigitado(valorCampoD);
 	});
 
+	//quando clicar
 	botaoVerificar.on("click", function () {
-		console.log("Valor recebido pelo campo E: " + typeof resultadoCampoE);
-		console.log("Valor recebido pelo campo D: " + typeof resultadoCampoD);
-
 		let sinalComparacao = null;//recebe a string que corresponde ao sinal de comparação
-		let resultadoComparacao = null;//recebe o resultado da comparação, sendo true ou false
+		let resultado = null;//recebe o resultado da comparação, sendo true ou false
 
 		if (condicaoEscolhida.val() == 0) {//==
 			sinalComparacao = "==";
-			resultadoComparacao = (resultadoCampoE == resultadoCampoD);
+			resultado = (tipoDeDadoCampoE == tipoDeDadoCampoD);
 		}
 		if (condicaoEscolhida.val() == 1) {//!=
 			sinalComparacao = "!=";
-			resultadoComparacao = (resultadoCampoE != resultadoCampoD);
+			resultado = (tipoDeDadoCampoE != tipoDeDadoCampoD);
 		}
 		if (condicaoEscolhida.val() == 2) {//===
 			sinalComparacao = "===";
-			resultadoComparacao = (resultadoCampoE === resultadoCampoD);
+			resultado = (tipoDeDadoCampoE === tipoDeDadoCampoD);
 		}
 		if (condicaoEscolhida.val() == 3) {//!==
 			sinalComparacao = "!==";
-			resultadoComparacao = (resultadoCampoE !== resultadoCampoD);
+			resultado = (tipoDeDadoCampoE !== tipoDeDadoCampoD);
 		}
 
-		let valoresComparados = resultadoCampoE + "" + sinalComparacao + "" + resultadoCampoD;
-		let tipoDado = typeof resultadoCampoE + " " + typeof resultadoCampoD;
+		let valoresComparados = tipoDeDadoCampoE + "" + sinalComparacao + "" + tipoDeDadoCampoD;
+		let tipoDeDado = typeof tipoDeDadoCampoE + " " + typeof tipoDeDadoCampoD;
 
-		let linhaCriada = criaLinhas(valoresComparados, tipoDado, resultadoComparacao);
-		$(".corpoTabela").append(linhaCriada);//adiciona a linha ao corpo da tabela
+		let linhaCriada = criaLinhas(valoresComparados, tipoDeDado, resultado);
+		$(".corpoTabela").append(linhaCriada);//adiciona a linha ao elemento recuperado que é o corpo da tabela
 
 	});
 
 	function identificaDadoDigitado(valorDigitadoCampo) {//passo o valor recuperado do campo como argumento na chamada da function
-
 		if (valorDigitadoCampo.length == 0) {//se o campo estiver vazio
-			console.log("Você precisa digitar algo no campo");
 			$(".erro").remove();
 			$("<p>Insira um valor para ser comparado.</p>").addClass("erro").insertAfter($("#pAcimaTabela"));
 			return null;
@@ -86,13 +82,11 @@ $(window).on("load", function () {
 
 			//verifica se o valor inputado não é número (NAN)
 			if (isNaN(valorDigitadoCampo)) {//se o valor inputado não for um número, ex: a1, 12a, '645", "97'...
-				console.log(valorDigitadoCampo + " não é um número");
 				return valorDigitadoCampo;
 			} else {//se o valor inputado for um número
 				let regexNumeros = /[+-]?([0-9]*[.])?[0-9]+/;//somente números ou sinais + - e , .
 				if (regexNumeros.test(valorDigitadoCampo)) {
 					let numero = parseFloat(valorDigitadoCampo, 10);//1º arg valor recebido, 2º arg a base de conversão, neste caso decimal
-					console.log("Valor convertido para float: " + numero);
 					return numero;//retorno o valor convertido para number
 				}
 			}
